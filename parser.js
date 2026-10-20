@@ -281,11 +281,12 @@
 
   function classifySchool(name, citizenship) {
     var s = String(name || '').trim();
-    if (!s || /^(none|no|n\/a|-|kindergarten)$/i.test(s)) return { suggestion: 'none', reason: 'წინა სკოლა მითითებული არ არის' };
+    if (!s || /^(none|no|n\/a|-|kindergarten)$/i.test(s)) return { suggestion: 'none', reason: 'წინა სკოლა მითითებული არ არის', reasonEn: 'No previous school given' };
     var foreign = FOREIGN_HINTS.test(s), geo = GEO_HINTS.test(s);
-    if (foreign && !geo) return { suggestion: 'foreign', reason: 'სკოლის სახელში უცხო ქვეყანა ან ქალაქია' };
-    if (geo && !foreign) return { suggestion: 'georgian', reason: 'სკოლის სახელში საქართველოსთან დაკავშირებული სიტყვაა' };
-    return { suggestion: 'unknown', reason: 'სახელიდან ქვეყანა ვერ დადგინდა' + (citizenship && !/georgia|საქართველო/i.test(citizenship) ? ' · მოქალაქეობა: ' + citizenship : '') };
+    if (foreign && !geo) return { suggestion: 'foreign', reason: 'სკოლის სახელში უცხო ქვეყანა ან ქალაქია', reasonEn: 'The school name contains a foreign country or city' };
+    if (geo && !foreign) return { suggestion: 'georgian', reason: 'სკოლის სახელში საქართველოსთან დაკავშირებული სიტყვაა', reasonEn: 'The school name points to Georgia' };
+    var foreignCz = citizenship && !/georgia|საქართველო/i.test(citizenship);
+    return { suggestion: 'unknown', reason: 'სახელიდან ქვეყანა ვერ დადგინდა' + (foreignCz ? ' · მოქალაქეობა: ' + citizenship : ''), reasonEn: 'The country is not clear from the name' + (foreignCz ? ' · citizenship: ' + citizenship : '') };
   }
 
   function gradeNumber(s) {
